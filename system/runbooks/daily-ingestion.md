@@ -23,7 +23,7 @@ This is the runbook a future scheduled job should execute. It is not a scheduled
 
 ## Workflow
 
-1. Read root `AGENTS.md`, `system/AGENTS.md`, `system/GUARDRAILS.md`, `system/RULES.md`, and `system/SPEC.md`.
+1. Read root `AGENTS.md`, `system/AGENTS.md`, `system/GUARDRAILS.md`, `system/RULES.md`, `system/SPEC.md`, and `system/rules/reconciliation.md`.
 2. Read `workspace/AGENTS.md` and all enabled local source specs.
 3. For each enabled source spec:
    - collect candidate records for the date range;
@@ -31,13 +31,20 @@ This is the runbook a future scheduled job should execute. It is not a scheduled
    - write normalized source records under `data/sources/`;
    - extract atoms under `data/atoms/`.
 4. Dedupe atoms by normalized text, time, entity, and source refs.
-5. Generate/update views:
+5. **Reconciliation pass** (see `system/rules/reconciliation.md`):
+   - For each newly extracted atom, query `data/indexes/knowledge.sqlite` for correction candidates (same kind + shared entity + overlapping time + different content).
+   - Apply correction policies: mark old atoms as `corrected`, add correction notice to their Markdown, link new atom via `corrects` field.
+   - Transition expired forward-looking atoms (`valid_until < today`) to `retrieval_status: historical`.
+   - Flag stale atoms (`refresh_after < today`, uncontradicted) for the refresh-needed view.
+   - Log ambiguous matches in the report under "Needs review".
+6. **Update SQLite index** — upsert all new/modified atoms into `data/indexes/knowledge.sqlite`.
+7. Generate/update views:
    - `data/views/agenda-next-14-days.md`
    - `data/views/open-loops.md`
    - `data/views/recent-changes.md`
    - `data/views/refresh-needed.md`
-6. Write report under `data/reports/YYYY-MM-DD.md`.
-7. If installation has enabled retrieval indexing, follow `system/runbooks/reindex.md`; otherwise only report that reindex is pending.
+8. Write report under `data/reports/YYYY-MM-DD.md`.
+9. If installation has enabled retrieval indexing, follow `system/runbooks/reindex.md`; otherwise only report that reindex is pending.
 
 ## Extraction policy
 
@@ -51,7 +58,10 @@ Extract atom kinds based on `system/taxonomy/atom-kinds/`, not topics.
 - Sources scanned:
 - Source records written:
 - Atoms written:
+- Atoms corrected:
+- Atoms transitioned to historical:
 - Views updated:
 - Duplicates skipped:
+- Needs review:
 - Needs follow-up:
 ```

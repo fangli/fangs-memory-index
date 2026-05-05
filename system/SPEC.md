@@ -77,8 +77,10 @@ Views are not authoritative evidence. They cite atoms/sources.
 
 Use two complementary retrieval surfaces:
 
-1. **Semantic retrieval** over generated Markdown under `data/`.
-2. **Deterministic query layer** for time/entity/status filters, eventually backed by `data/indexes/knowledge.sqlite` or an equivalent local database.
+1. **Semantic retrieval** over generated Markdown under `data/`. The retrieval agent reads full atom files and follows inline correction notices (e.g., "CORRECTED — see current version at...").
+2. **Deterministic query layer** backed by `data/indexes/knowledge.sqlite` — used by the indexing agent for reconciliation, view generation, and structured queries.
+
+The retrieval agent does not query SQLite directly. It relies on Markdown content and inline instructions within atoms.
 
 This supports questions like:
 
@@ -104,13 +106,20 @@ For agenda-like questions:
 
 Every atom can have:
 
+- `observed_at` (required)
 - `valid_from`
 - `valid_until`
-- `observed_at`
 - `refresh_after`
-- `staleness_policy`
 
 If freshness is unknown, store the information anyway but mark it as `unknown` instead of pretending it is current.
+
+## Correction model
+
+Mutable facts (forward-looking events, active plans, current statuses) are subject to correction when new contradicting evidence arrives. Corrected atoms remain in the same files but are marked with `retrieval_status: corrected` and an inline notice pointing to the replacement.
+
+Historical facts (past events, consumed resources) are never corrected unless factually wrong. They transition to `retrieval_status: historical` once their time range passes.
+
+See `system/rules/reconciliation.md` for full correction detection and resolution policies.
 
 ## Pluggability
 

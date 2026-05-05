@@ -52,13 +52,30 @@ Every atom must cite at least one `source_ref`. If no source record exists, crea
 
 ## Freshness rule
 
-Mutable facts must include freshness metadata: `observed_at` plus at least one of `valid_until`, `refresh_after`, or `staleness_policy`.
+Mutable facts must include freshness metadata: `observed_at` (required on all atoms) plus at least one of `valid_until`, `refresh_after`, or a note that freshness is unknown.
 
 If freshness is unknown, mark it as unknown. Do not imply stale information is current.
+
+## Correction rule
+
+When new evidence contradicts an existing active atom, the indexing agent must follow `system/rules/reconciliation.md`:
+
+1. Mark the old atom `retrieval_status: corrected` with a `corrected_by` pointer.
+2. Add an inline correction notice to the old atom's Markdown body.
+3. Write the new atom with `corrects` pointing back.
+4. Update `data/indexes/knowledge.sqlite`.
+
+Do not delete corrected atoms. They remain in indexed directories for history/audit queries. The retrieval agent reads the correction notice and follows the pointer to the current version.
 
 ## Dedupe rule
 
 Before writing new source records or atoms, check existing records or manifests for matching source IDs, content hashes, normalized titles, times, and entities.
+
+## Reconciliation rule
+
+During daily ingestion, after atom extraction, run the reconciliation pass defined in `system/rules/reconciliation.md`. This detects corrections, transitions expired atoms to `historical`, and flags ambiguous matches.
+
+Do not silently overwrite or delete atoms. Corrections are tracked via `corrected_by` / `corrects` chains and inline correction notices.
 
 ## Retrieval/indexing rule
 

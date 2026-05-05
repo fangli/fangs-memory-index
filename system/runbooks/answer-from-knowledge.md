@@ -26,10 +26,11 @@ Purpose: decide when to answer from local knowledge and when to refresh/research
    - views for summaries
    - sources for provenance
 3. For fuzzy time questions, normalize range in the operator's configured local timezone.
-4. Check freshness:
+4. **Handle corrected atoms:** if a retrieved atom contains a correction notice (`⚠️ CORRECTED`), follow the pointer to the current version and use that instead. Do not answer from corrected atoms.
+5. Check freshness:
    - If atom/source covers the requested date/range and is not stale, answer from knowledge.
    - If missing or stale, research/fetch only when the operator's task permits it, then preserve the broader reusable source if capture is allowed.
-5. Answer concisely and include provenance when it affects trust.
+6. Answer concisely and include provenance when it affects trust.
 
 ## Example: agenda this week
 
