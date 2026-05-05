@@ -13,7 +13,7 @@ Read in this order:
 1. root `AGENTS.md`
 2. `system/SPEC.md`
 3. `system/RULES.md`
-4. relevant `system/system/runbooks/*.md`
+4. relevant `system/runbooks/*.md`
 5. for local source changes: `workspace/AGENTS.md` and relevant files under `workspace/source-specs/`
 6. for atom/category behavior: `system/taxonomy/AGENTS.md` and relevant `system/taxonomy/atom-kinds/*.md`
 

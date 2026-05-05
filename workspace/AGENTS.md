@@ -2,7 +2,7 @@
 
 This folder contains local configuration for one installation of the personal memory index.
 
-Agents may update this folder only by following runbooks under `system/system/runbooks/`.
+Agents may update this folder only by following runbooks under `system/runbooks/`.
 
 ## Source specs
 

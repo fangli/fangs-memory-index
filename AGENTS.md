@@ -26,7 +26,7 @@ For normal operation, read:
 
 1. `system/AGENTS.md`
 2. `system/RULES.md`
-3. the relevant runbook under `system/system/runbooks/`
+3. the relevant runbook under `system/runbooks/`
 4. local specs under `workspace/source-specs/` if source ingestion is involved
 
 Never configure the repository root or `system/` as retrieval/indexing paths. Index generated data only, typically selected subfolders under `data/`.

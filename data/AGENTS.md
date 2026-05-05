@@ -10,7 +10,7 @@ Recommended future retrieval paths are selected subfolders here, not the reposit
 
 ## Subfolders
 
-- `workspace/source-specs/` normalized source records.
+- `sources/` normalized source records.
 - `atoms/` extracted reusable atom records.
 - `views/` generated rollups.
 - `manifests/` seen IDs, hashes, ingestion state.
