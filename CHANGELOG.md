@@ -1,4 +1,4 @@
-# Changelog
+## Changelog
 
 ## 2026-05-05
 
@@ -15,3 +15,29 @@
 - Updated SPEC.md retrieval strategy and correction model.
 - Updated GUARDRAILS.md and RULES.md with reconciliation and correction rules.
 - Updated SCHEMAS.md index.
+
+## 2026-05-05 (rev 2) — Reconciliation hardening & indexing agent entry point
+
+### Fixes
+- Fixed time overlap check: proper range overlap (`time_start <= end_effective AND end_effective >= time_start`) instead of `BETWEEN` on `time_start` alone.
+- Fixed duplicate step numbering in answer-from-knowledge runbook.
+- Removed non-existent `time.date` field from event kind; clarified mapping to `time.start`.
+- Clarified resource coverage uses `valid_from`/`valid_until` (not a separate `coverage` field).
+
+### Additions
+- `body_hash` (SHA-256) field added to atom schema and SQLite index for fast deduplication.
+- `entity_aliases` table added to SQLite schema for normalized entity matching.
+- `resource_type` column added to SQLite schema (used in resource correction matching).
+- Entity normalization rules: lowercase, trim, collapse whitespace, alias expansion.
+- Explicit per-kind historical transition criteria (event, task, resource, claim, etc.).
+- Correction chain depth limit (5 hops retrieval, flatten at depth 4 during indexing).
+- Per-kind candidate queries: events/tasks use time overlap, resources use coverage overlap, timeless kinds use entity-only matching.
+- Observations explicitly skip correction detection (they coexist).
+- Retrieval-time filtering guidance: prefer `retrieval_status = 'active'` filter when available.
+- New examples: deduplication (3b), chain flattening (5), historical transition (6), ambiguous match (7).
+
+### Indexing agent entry point
+- Daily ingestion runbook now has a **Reading Order** section: 6 phases, 15 numbered steps, covering system → data model → reconciliation → taxonomy → source specs → examples.
+- SQLite creation is an explicit precondition (step 0).
+- Workflow steps include inline SQL for dedup, candidate queries, view generation.
+- Structured output report format with correction details and ambiguity log.

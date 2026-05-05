@@ -77,10 +77,10 @@ Views are not authoritative evidence. They cite atoms/sources.
 
 Use two complementary retrieval surfaces:
 
-1. **Semantic retrieval** over generated Markdown under `data/`. The retrieval agent reads full atom files and follows inline correction notices (e.g., "CORRECTED — see current version at...").
+1. **Semantic retrieval** over generated Markdown under `data/`. The retrieval agent reads full atom files and follows inline correction notices (e.g., "CORRECTED — see current version at..."). When the retrieval system supports metadata filtering, prefer filtering `retrieval_status = 'active'` at query time to avoid surfacing corrected atoms.
 2. **Deterministic query layer** backed by `data/indexes/knowledge.sqlite` — used by the indexing agent for reconciliation, view generation, and structured queries.
 
-The retrieval agent does not query SQLite directly. It relies on Markdown content and inline instructions within atoms.
+The retrieval agent does not query SQLite directly. It relies on Markdown content and inline instructions within atoms. However, views generated from SQLite (agenda, open loops) pre-filter to active atoms, providing an indirect benefit.
 
 This supports questions like:
 
@@ -118,6 +118,13 @@ If freshness is unknown, store the information anyway but mark it as `unknown` i
 Mutable facts (forward-looking events, active plans, current statuses) are subject to correction when new contradicting evidence arrives. Corrected atoms remain in the same files but are marked with `retrieval_status: corrected` and an inline notice pointing to the replacement.
 
 Historical facts (past events, consumed resources) are never corrected unless factually wrong. They transition to `retrieval_status: historical` once their time range passes.
+
+Key mechanisms:
+
+- **Detection:** same kind + shared entity (via alias expansion) + overlapping time + different `body_hash` + newer `observed_at`.
+- **Resolution:** old atom marked `corrected` with inline notice; new atom links back via `corrects`.
+- **Chain flattening:** when a 4th correction occurs, all prior versions point directly to the latest (avoids deep chains).
+- **Retrieval safety:** corrected atoms contain a visible `⚠️ CORRECTED` notice; retrieval agents follow the pointer. Views only include `active` atoms.
 
 See `system/rules/reconciliation.md` for full correction detection and resolution policies.
 

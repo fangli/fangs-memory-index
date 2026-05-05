@@ -30,6 +30,8 @@ freshness:
   valid_until: date | null
   refresh_after: date | null
 status: open | done | blocked | maybe | unknown
+body_hash: SHA-256 hex string | null
+resource_type: string | null
 ```
 
 ## Correction fields (set by reconciliation)

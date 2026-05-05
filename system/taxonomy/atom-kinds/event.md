@@ -8,8 +8,14 @@ Use for meetings, school events, deadlines with date ranges, special days, appoi
 
 - `kind: event`
 - `title`
-- one of `time.start`, `time.end`, `time.date`, or `time.expression`
+- one of `time.start`, `time.end`, or `time.expression`
 - `source_refs`
+
+## Time field mapping
+
+When an event has a single date (e.g., "May 5"), store it as `time.start`. When it spans a range (e.g., "May 4 to May 8"), store both `time.start` and `time.end`.
+
+The SQLite index maps these to `time_start` and `time_end` columns. The `time.expression` field is for fuzzy/recurring time descriptions that can't be resolved to exact dates (e.g., "every Tuesday").
 
 ## Retrieval behavior
 

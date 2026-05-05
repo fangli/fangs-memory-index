@@ -33,17 +33,22 @@ SQLite row inserted with `retrieval_status = 'active'`.
 
 Source: conversation where Fang says "I changed my flight to July 3."
 
-Indexing agent extracts new atom, then queries SQLite:
+Indexing agent extracts new atom, then queries SQLite for correction candidates:
 
 ```sql
-SELECT * FROM atoms
-WHERE kind = 'event'
-  AND retrieval_status = 'active'
-  AND id IN (SELECT atom_id FROM atom_entities WHERE entity IN ('fang', 'flight', 'shanghai'))
-  AND time_start BETWEEN '2026-06-15' AND '2026-07-15';
+SELECT a.* FROM atoms a
+JOIN atom_entities ae ON a.id = ae.atom_id
+WHERE a.kind = 'event'
+  AND a.retrieval_status = 'active'
+  AND ae.entity IN ('fang', 'flight', 'shanghai', 'fang li', 'pvg')  -- expanded via entity_aliases
+  AND (
+    (a.time_start IS NULL AND a.time_end IS NULL)
+    OR (a.time_start <= '2026-07-03' AND COALESCE(a.time_end, a.time_start) >= '2026-07-03')
+  )
+GROUP BY a.id;
 ```
 
-Finds `atom.fang-shanghai-flight-2026q3`. Detects: same entities, same kind, nearby time, different `time_start`, newer `observed_at`. This is a correction.
+Finds `atom.fang-shanghai-flight-2026q3`. Detects: same entities, same kind, overlapping time range, different `body_hash`, newer `observed_at`. This is a correction.
 
 **Old atom updated** in `data/atoms/2026-05-05.md`:
 
@@ -174,6 +179,21 @@ Old atom gets `corrected`, new version replaces it. Same flow as the flight exam
 
 ---
 
+## Example 3b: Deduplication — same menu re-sent
+
+School re-sends the same May menu email on May 12 (no changes).
+
+Indexing agent extracts atom, computes `body_hash`. Queries:
+
+```sql
+SELECT id FROM atoms
+WHERE kind = 'resource' AND body_hash = :hash AND retrieval_status = 'active';
+```
+
+Finds `atom.luna-school-lunch-2026-05` with matching hash and shared entity `luna`. This is a **duplicate** — skip. Log in `data/manifests/2026-05-12.json`.
+
+---
+
 ## Example 4: Preference change
 
 ### Day 1
@@ -216,3 +236,76 @@ confidence: 0.9
 
 Fang prefers black coffee (previously oat milk lattes, changed April 2026).
 ```
+
+---
+
+## Example 5: Correction chain flattening
+
+Fang's flight gets rescheduled three times:
+
+- v1 (May 5): July 1 → `atom.flight-v1`
+- v2 (May 6): July 3 → `atom.flight-v2` (corrects v1)
+- v3 (May 8): July 5 → `atom.flight-v3` (corrects v2)
+- v4 (May 10): July 7 → `atom.flight-v4` (corrects v3)
+
+At v4, the chain depth reaches 4. The indexing agent **flattens**:
+
+- v1: `corrected_by: atom.flight-v4` (was v2, now points directly to latest)
+- v2: `corrected_by: atom.flight-v4` (was v3, now points directly to latest)
+- v3: `corrected_by: atom.flight-v4`
+- v4: `retrieval_status: active`, `corrects: atom.flight-v3`
+
+This ensures the retrieval agent can reach the current version in 1 hop from any prior version.
+
+---
+
+## Example 6: Historical transition — past event
+
+Atom in `data/atoms/2026-04-20.md`:
+
+```markdown
+---
+id: atom.luna-recital-2026-04
+kind: event
+retrieval_status: active
+title: Luna piano recital
+observed_at: 2026-04-20
+entities: [luna, piano, recital]
+time:
+  start: 2026-04-28
+source_refs: [source.email-2026-04-20]
+confidence: 0.95
+---
+
+Luna's piano recital at school, April 28 at 3pm.
+```
+
+During May 1 ingestion, the reconciliation pass checks active events:
+
+```sql
+SELECT * FROM atoms
+WHERE retrieval_status = 'active'
+  AND kind = 'event'
+  AND time_start < '2026-05-01';
+```
+
+Finds `atom.luna-recital-2026-04`. The event has passed (`time_start < today`). No open task references it. Transition to `historical`:
+
+- Update frontmatter: `retrieval_status: historical`, `updated_at: 2026-05-01T...`
+- Update SQLite row.
+- Do NOT modify the body or add a correction notice.
+
+The atom remains searchable. "What events did Luna have in April?" still finds it.
+
+---
+
+## Example 7: Ambiguous match — logged for review
+
+Day 1: Atom about "Fang meeting with Dr. Chen, June 15."
+Day 2: Atom about "Fang appointment with Dr. Chen, June 20."
+
+Same entities (fang, dr. chen), same kind (event), but different dates (June 15 vs June 20) that don't overlap. The indexing agent is uncertain: is this a rescheduled meeting (correction) or two separate appointments?
+
+Since the time ranges don't overlap (both are point events on different days), the candidate query won't match them. Both remain `active`. No ambiguity logged in this case — the time overlap check correctly identifies them as separate events.
+
+But if Day 2 said "Fang meeting with Dr. Chen, June 15 at 3pm" (same date, different detail), the overlap check would match. The agent compares content: if only the time-of-day changed, it's a correction. If the topic/purpose differs significantly, it's ambiguous → log for review.
