@@ -1,0 +1,37 @@
+# Generated user knowledge
+/library/sources/**
+/library/atoms/**
+/library/views/**
+/library/manifests/**
+/library/indexes/**
+/library/reports/**
+!/library/**/.gitkeep
+!/library/AGENTS.md
+!/library/README.md
+
+# Local source specs often contain personal paths/accounts/workflows
+/sources/*.md
+!/sources/AGENTS.md
+!/sources/TEMPLATE.md
+!/sources/examples/**
+/sources/local/**
+/sources/private/**
+
+# Local/private category extensions
+/entities/local/**
+/entities/private/**
+/entities/*.local.md
+
+# Local notes/config/secrets
+*.local.md
+.env
+.env.*
+!.env.example
+.DS_Store
+
+# Runtime/editor caches
+.cache/
+.tmp/
+tmp/
+.vscode/
+.idea/
