@@ -4,15 +4,15 @@ Do not run unless the operator explicitly approves config/index changes.
 
 ## Rule
 
-Index generated folders only. Never index `knowledge_base_dir` root.
+Index generated folders only. Never index `knowledge_base_dir`, `system/`, or `workspace/`.
 
 ## Candidate retrieval paths
 
 ```text
-knowledge_base_dir/library/sources
-knowledge_base_dir/library/atoms
-knowledge_base_dir/library/views
-knowledge_base_dir/library/reports
+knowledge_base_dir/data/sources
+knowledge_base_dir/data/atoms
+knowledge_base_dir/data/views
+knowledge_base_dir/data/reports
 ```
 
 ## Procedure

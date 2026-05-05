@@ -15,13 +15,13 @@ outputs:
 
 ## Purpose
 
-Allow the operator or agents to drop ad-hoc Markdown notes under `library/sources/manual/` for later extraction.
+Allow the operator or agents to drop ad-hoc Markdown notes under `data/sources/manual/` for later extraction.
 
 ## Collection contract
 
-- Scan `library/sources/manual/` if it exists.
+- Scan `data/sources/manual/` if it exists.
 - Treat each Markdown file as a source record candidate.
-- Extract atoms according to `entities/` category definitions.
+- Extract atoms according to `system/taxonomy/atom-kinds/` category definitions.
 
 ## Notes
 

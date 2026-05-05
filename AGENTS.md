@@ -1,58 +1,32 @@
-# AGENTS.md — Knowledge Library Operator Guide
+# AGENTS.md — Repository Boundary Guide
 
-You are operating a local personal memory index for an AI-agent runtime.
+This repository is split into immutable framework files and mutable local/generated state.
 
-## Non-negotiables
+## Folder roles
 
-1. Treat the project root as `knowledge_base_dir`.
-2. Keep project files under `knowledge_base_dir`.
-3. Do **not** configure `knowledge_base_dir` itself as a retrieval/search path.
-4. Do **not** create scheduled jobs, edit runtime config, rebuild indexes, or fetch external data unless the operator explicitly asks.
-5. Prefer runbooks and specs over ad-hoc one-off commands.
-6. Add new ingestion requirements by creating/updating/deleting Markdown specs in `sources/`, not by scattering special cases across random files.
-7. Organize by information behavior, not by topic folders.
+- `system/` — static framework instructions, schemas, taxonomy, templates, examples, and runbooks. Treat as read-only unless the operator explicitly asks to change the framework.
+- `workspace/` — mutable local configuration. Agents may update it when following system runbooks.
+- `data/` — generated user knowledge and indexes. Daily ingestion may update this folder.
 
-## Before working
+## Mutation policy
 
-Read in this order:
-
-1. `README.md`
-2. `SPEC.md`
-3. `RULES.md`
-4. Relevant `runbooks/*.md`
-5. For source changes: `sources/AGENTS.md` and relevant source spec files.
-6. For atom/category changes: `entities/AGENTS.md` and relevant category files.
-
-## Mental model
-
-Use this pipeline:
+Default permissions for agents:
 
 ```text
-source specs -> collectors -> source records -> atom extraction -> deterministic metadata/indexes -> generated views -> retrieval index
+system/     read-only
+workspace/  editable via runbook
+data/       editable/generated via runbook
 ```
 
-The subject is arbitrary. A flyer, work message, web page, or chat message may all generate the same atom kinds: `event`, `task`, `claim`, `resource`, etc.
+Do not create scheduled jobs, change runtime config, rebuild retrieval indexes, or fetch external data unless the operator explicitly asks.
 
-## Output locations
+## Required reading
 
-Generated content belongs under `library/`:
+For normal operation, read:
 
-- `library/sources/` — normalized source records.
-- `library/atoms/` — extracted atom records.
-- `library/views/` — generated rollups.
-- `library/manifests/` — hashes, seen IDs, ingestion state.
-- `library/indexes/` — deterministic local indexes, e.g. SQLite.
-- `library/reports/` — ingestion/librarian reports.
+1. `system/AGENTS.md`
+2. `system/RULES.md`
+3. the relevant runbook under `system/system/runbooks/`
+4. local specs under `workspace/source-specs/` if source ingestion is involved
 
-## Indexed paths after installation
-
-Future installation should index selected generated output folders, for example:
-
-```text
-knowledge_base_dir/library/sources
-knowledge_base_dir/library/atoms
-knowledge_base_dir/library/views
-knowledge_base_dir/library/reports
-```
-
-Never index the project root because it contains instructions, templates, and specs that are not user knowledge.
+Never configure the repository root or `system/` as retrieval/indexing paths. Index generated data only, typically selected subfolders under `data/`.

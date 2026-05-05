@@ -4,23 +4,24 @@ Purpose: prepare local generated folders and validate docs. Do not change runtim
 
 ## Steps
 
-1. Read `../AGENTS.md`, `../SPEC.md`, and `../RULES.md`.
+1. Read root `AGENTS.md`, `system/AGENTS.md`, `system/SPEC.md`, and `system/RULES.md`.
 2. Ensure generated folders exist:
 
 ```bash
-mkdir -p "$knowledge_base_dir"/library/{sources,atoms,views,manifests,indexes,reports}
+mkdir -p "$knowledge_base_dir"/data/{sources,atoms,views,manifests,indexes,reports}
 ```
 
 3. Validate local source specs and examples:
 
 ```bash
-find "$knowledge_base_dir"/sources -maxdepth 2 -name '*.md' -print | sort
+find "$knowledge_base_dir"/workspace/source-specs -maxdepth 1 -name '*.md' -print | sort
+find "$knowledge_base_dir"/system/examples/source-specs -maxdepth 1 -name '*.md' -print | sort
 ```
 
-4. Validate category specs:
+4. Validate taxonomy specs:
 
 ```bash
-find "$knowledge_base_dir"/entities -maxdepth 1 -name '*.md' -print | sort
+find "$knowledge_base_dir"/system/taxonomy/atom-kinds -maxdepth 1 -name '*.md' -print | sort
 ```
 
 5. Report status to the operator.

@@ -1,6 +1,6 @@
 # View Record Schema
 
-Views are generated Markdown files under `library/views/`.
+Views are generated Markdown files under `data/views/`.
 
 ## Frontmatter
 

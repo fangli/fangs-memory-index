@@ -39,5 +39,5 @@ Describe expiry/refresh behavior.
 
 ## Output requirements
 
-Generated source records go to `library/sources/`.
-Generated atoms go to `library/atoms/`.
+Generated source records go to `data/sources/`.
+Generated atoms go to `data/atoms/`.

@@ -18,22 +18,22 @@ Example:
 
 ```bash
 cd /path/to/knowledge_base_dir
-find . -maxdepth 2 -type f | sort
+find . -maxdepth 3 -type f | sort
 ```
 
-Expected top-level files include `AGENTS.md`, `SPEC.md`, `RULES.md`, `INSTALLATION.md`, and `RUNBOOKS.md`.
+Expected top-level files include `AGENTS.md`, `README.md`, `LICENSE`, and `CHANGELOG.md`. Static framework docs live under `system/`.
 
 ## Step 2 — Initialize generated folders
 
 Generated folders are specified as:
 
 ```text
-library/sources
-library/atoms
-library/views
-library/manifests
-library/indexes
-library/reports
+data/sources
+data/atoms
+data/views
+data/manifests
+data/indexes
+data/reports
 ```
 
 If missing, create them under `knowledge_base_dir`.
@@ -43,22 +43,22 @@ If missing, create them under `knowledge_base_dir`.
 Source specs are local configuration and are ignored by default unless explicitly force-added.
 
 ```bash
-cp sources/examples/agent-session-logs.md sources/my-agent-session-logs.md
+cp system/examples/source-specs/agent-session-logs.md workspace/source-specs/my-agent-session-logs.md
 ```
 
 Edit the copied file to match the local runtime's transcript paths, time zone, and collection rules.
 
 ## Step 4 — Configure retrieval paths
 
-Do not index `knowledge_base_dir` root.
+Do not index `knowledge_base_dir`, `system/`, or `workspace/`.
 
 When the operator asks to enable indexing, add only generated Markdown folders to the runtime's retrieval/search configuration, for example:
 
 ```text
-knowledge_base_dir/library/sources
-knowledge_base_dir/library/atoms
-knowledge_base_dir/library/views
-knowledge_base_dir/library/reports
+knowledge_base_dir/data/sources
+knowledge_base_dir/data/atoms
+knowledge_base_dir/data/views
+knowledge_base_dir/data/reports
 ```
 
 Preserve existing runtime configuration values.
@@ -89,7 +89,7 @@ execution: isolated/non-interactive agent task if available
 The job prompt should point the agent to:
 
 - `knowledge_base_dir/AGENTS.md`
-- `knowledge_base_dir/runbooks/daily-ingestion.md`
+- `knowledge_base_dir/system/runbooks/daily-ingestion.md`
 
 ## Step 7 — First manual dry run
 
@@ -97,7 +97,7 @@ Before enabling recurrence, run the daily ingestion runbook manually for one dat
 
 ## Step 8 — Maintenance
 
-- Add new local source specs under `sources/`.
-- Update category behavior under `entities/`.
-- Keep generated output under `library/`.
+- Add new local source specs under `workspace/source-specs/`.
+- Update framework/category behavior under `system/` only when explicitly changing the framework.
+- Keep generated output under `data/`.
 - Keep this installation doc current as the system evolves.

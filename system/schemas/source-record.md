@@ -1,6 +1,6 @@
 # Source Record Schema
 
-Source records are Markdown files under `library/sources/`.
+Source records are Markdown files under `data/sources/`.
 
 ## Frontmatter
 
@@ -10,9 +10,9 @@ kind: email | chat | file | web | session | manual | calendar | custom
 title: string
 created_at: ISO-8601
 observed_at: ISO-8601
-source_spec: source_id from sources/*.md
+source_spec: source_id from workspace/source-specs/*.md
 origin:
-  type: gmail | telegram | web | pdf | session | manual | custom
+  type: message | web | file | session | manual | custom
   id: string
   url: string | null
 trust: primary | secondary | assistant-derived | mixed

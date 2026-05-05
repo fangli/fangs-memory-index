@@ -17,8 +17,16 @@ Store information by behavioral kind:
 - source
 - atom
 - view
-- entity/category definition
+- taxonomy/category definition
 - ingestion source spec
+
+## Repository zones
+
+```text
+system/     static framework files; read-only by default
+workspace/  mutable local configuration, especially source specs
+data/       generated user knowledge and indexes
+```
 
 ## Object model
 
@@ -69,8 +77,8 @@ Views are not authoritative evidence. They cite atoms/sources.
 
 Use two complementary retrieval surfaces:
 
-1. **Semantic retrieval** over generated Markdown under `library/`.
-2. **Deterministic query layer** for time/entity/status filters, eventually backed by `library/indexes/knowledge.sqlite` or an equivalent local database.
+1. **Semantic retrieval** over generated Markdown under `data/`.
+2. **Deterministic query layer** for time/entity/status filters, eventually backed by `data/indexes/knowledge.sqlite` or an equivalent local database.
 
 This supports questions like:
 
@@ -106,7 +114,7 @@ If freshness is unknown, store the information anyway but mark it as `unknown` i
 
 ## Pluggability
 
-Source ingestion is controlled by Markdown specs in `sources/`.
-Adding a source means adding one spec file. Removing a source means deleting or disabling its spec file.
+Source ingestion is controlled by Markdown specs in `workspace/source-specs/`.
+Adding a source means adding one local spec file. Removing a source means deleting or disabling its local spec file.
 
-The daily librarian should read all enabled source specs and execute their collection instructions.
+The daily librarian should read all enabled local source specs and execute their collection instructions.

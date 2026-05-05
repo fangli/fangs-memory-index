@@ -2,12 +2,17 @@
 
 ## Scope
 
-All project artifacts live under `knowledge_base_dir`.
-Generated user knowledge lives under `knowledge_base_dir/library/`.
+- Static framework artifacts live under `knowledge_base_dir/system/`.
+- Mutable local configuration lives under `knowledge_base_dir/workspace/`.
+- Generated user knowledge lives under `knowledge_base_dir/data/`.
+
+## Immutability rule
+
+Agents must treat `system/` as read-only unless the operator explicitly asks to change the framework.
 
 ## Root indexing rule
 
-Never use `knowledge_base_dir` itself as a retrieval/search path. It contains specs, templates, and instructions that should not pollute user knowledge retrieval.
+Never use `knowledge_base_dir`, `system/`, or `workspace/` as retrieval/search paths. They contain specs, templates, instructions, and local configuration that should not pollute user knowledge retrieval.
 
 ## Capture rule
 
@@ -37,9 +42,9 @@ If information may expire, represent freshness explicitly. Do not silently treat
 
 ## Deletion/update rule
 
-- Source ingestion behavior: edit `sources/*.md`.
-- Atom kind behavior: edit `entities/*.md`.
-- Runtime/generated knowledge: update under `library/` via runbook.
+- Source ingestion behavior: edit `workspace/source-specs/*.md` via runbook.
+- Atom kind behavior: edit `system/taxonomy/atom-kinds/*.md` only when explicitly changing framework behavior.
+- Runtime/generated knowledge: update under `data/` via runbook.
 - Do not patch random files for new ingestion requirements.
 
 ## Privacy/trust rule

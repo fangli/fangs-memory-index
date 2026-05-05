@@ -2,8 +2,8 @@
 
 ## Add a source
 
-1. Read `../sources/AGENTS.md`.
-2. Copy `../sources/TEMPLATE.md` or an example from `../sources/examples/` to `../sources/<source-name>.md`.
+1. Read `workspace/AGENTS.md`.
+2. Copy `system/examples/source-spec-template.md` or an example from `system/examples/source-specs/` to `workspace/source-specs/<source-name>.md`.
 3. Fill frontmatter:
    - `source_id`
    - `status`

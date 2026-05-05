@@ -21,7 +21,7 @@ Capture useful facts, events, tasks, notices, resources, and agenda items from e
 
 ## Collection contract
 
-Runtime-specific inbox integration is not installed by this example. When enabled, the collector should use stable message IDs and avoid reprocessing via `library/manifests/seen-hashes.json` or an equivalent manifest.
+Runtime-specific inbox integration is not installed by this example. When enabled, the collector should use stable message IDs and avoid reprocessing via `data/manifests/seen-hashes.json` or an equivalent manifest.
 
 ## Extraction hints
 

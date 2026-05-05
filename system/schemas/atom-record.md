@@ -1,6 +1,6 @@
 # Atom Record Schema
 
-Atom records are Markdown files under `library/atoms/`. Multiple atoms may live in one daily batch file.
+Atom records are Markdown files under `data/atoms/`. Multiple atoms may live in one daily batch file.
 
 ## Required fields
 

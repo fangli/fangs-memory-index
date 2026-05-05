@@ -11,6 +11,6 @@ A chosen direction, constraint, or explicit decision.
 
 ## Examples
 
-- Do not use QMD at the moment.
-- Keep knowledge project root out of memory extraPaths.
-- Store new source requirements in `sources/*.md`.
+- Use a specific retrieval backend for now.
+- Keep the project root out of retrieval paths.
+- Store new source requirements in `workspace/source-specs/*.md`.

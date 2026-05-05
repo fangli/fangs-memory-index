@@ -1,26 +1,28 @@
 # Generated user knowledge
-/library/sources/**
-/library/atoms/**
-/library/views/**
-/library/manifests/**
-/library/indexes/**
-/library/reports/**
-!/library/**/.gitkeep
-!/library/AGENTS.md
-!/library/README.md
+/data/sources/**
+/data/atoms/**
+/data/views/**
+/data/manifests/**
+/data/indexes/**
+/data/reports/**
+!/data/**/.gitkeep
+!/data/AGENTS.md
+!/data/README.md
 
-# Local source specs often contain personal paths/accounts/workflows
-/sources/*.md
-!/sources/AGENTS.md
-!/sources/TEMPLATE.md
-!/sources/examples/**
-/sources/local/**
-/sources/private/**
+# Mutable local configuration
+/workspace/source-specs/*.md
+!/workspace/source-specs/README.md
+/workspace/*.yaml
+/workspace/*.yml
+/workspace/*.json
+/workspace/*.local.md
+/workspace/local/**
+/workspace/private/**
 
-# Local/private category extensions
-/entities/local/**
-/entities/private/**
-/entities/*.local.md
+# Local/private framework extensions
+/system/taxonomy/local/**
+/system/taxonomy/private/**
+/system/taxonomy/**/*.local.md
 
 # Local notes/config/secrets
 *.local.md
