@@ -2,6 +2,15 @@
 
 This folder contains static framework instructions for a generic personal memory index.
 
+## Guardrails
+
+- **Role:** static framework operator guide.
+- **Mutation:** read-only unless the operator explicitly asks to change framework behavior.
+- **Allowed writes:** none during normal operation.
+- **Do not:** edit `system/` while executing ingestion, indexing, source collection, or answer-from-knowledge workflows.
+- **Before acting:** read `system/GUARDRAILS.md` and `system/RULES.md`.
+- **Failure mode:** if a framework change seems useful but was not requested, report it as a recommendation instead of editing.
+
 ## Immutability rule
 
 Agents should not modify files under `system/` unless the operator explicitly asks to change the framework itself.
@@ -11,11 +20,12 @@ Agents should not modify files under `system/` unless the operator explicitly as
 Read in this order:
 
 1. root `AGENTS.md`
-2. `system/SPEC.md`
-3. `system/RULES.md`
-4. relevant `system/runbooks/*.md`
-5. for local source changes: `workspace/AGENTS.md` and relevant files under `workspace/source-specs/`
-6. for atom/category behavior: `system/taxonomy/AGENTS.md` and relevant `system/taxonomy/atom-kinds/*.md`
+2. `system/GUARDRAILS.md`
+3. `system/SPEC.md`
+4. `system/RULES.md`
+5. relevant `system/runbooks/*.md`
+6. for local source changes: `workspace/AGENTS.md` and relevant files under `workspace/source-specs/`
+7. for atom/category behavior: `system/taxonomy/AGENTS.md` and relevant `system/taxonomy/atom-kinds/*.md`
 
 ## Mental model
 

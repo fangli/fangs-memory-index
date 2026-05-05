@@ -1,5 +1,15 @@
 # Runbook: Troubleshooting
 
+## Guardrails
+
+- **Role:** diagnostic runbook.
+- **Mutation:** read-only by default.
+- **Allowed writes:** none unless a referenced repair runbook explicitly allows it.
+- **Do not:** delete data, rebuild indexes, or edit config as a first response.
+- **Before acting:** classify the symptom and inspect relevant manifests/config/docs.
+- **After acting:** report diagnosis, evidence, and the safest next repair step.
+- **Failure mode:** if diagnosis is uncertain, propose a dry-run check instead of changing state.
+
 ## Search returns docs/templates/config instead of user knowledge
 
 Likely cause: project root, `system/`, or `workspace/` was indexed.

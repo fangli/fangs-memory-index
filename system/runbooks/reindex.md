@@ -2,6 +2,16 @@
 
 Do not run unless the operator explicitly approves config/index changes.
 
+## Guardrails
+
+- **Role:** retrieval index maintenance runbook.
+- **Mutation:** runtime config/index side effects only after explicit approval.
+- **Allowed writes:** runtime-specific index storage; no writes to `system/` or `workspace/`.
+- **Do not:** index `knowledge_base_dir`, `system/`, or `workspace/`; do not change unrelated runtime config.
+- **Before acting:** inspect current retrieval config and show planned path changes.
+- **After acting:** verify status/search using runtime-specific commands and report results.
+- **Failure mode:** if config tooling or index command is unclear, stop and ask.
+
 ## Rule
 
 Index generated folders only. Never index `knowledge_base_dir`, `system/`, or `workspace/`.

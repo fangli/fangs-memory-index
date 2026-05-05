@@ -2,6 +2,15 @@
 
 This folder contains local configuration for one installation of the personal memory index.
 
+## Guardrails
+
+- **Role:** mutable local configuration guide.
+- **Mutation:** editable only through runbooks, primarily `system/runbooks/add-source.md`.
+- **Allowed writes:** `workspace/source-specs/` for local source specs.
+- **Do not:** store generated source records, atoms, reports, or indexes in `workspace/`.
+- **Before acting:** validate whether the task is a local configuration change or a framework change.
+- **Failure mode:** if a requested source needs new framework capabilities, write the local spec as `status: draft` and report the missing capability.
+
 Agents may update this folder only by following runbooks under `system/runbooks/`.
 
 ## Source specs
@@ -18,7 +27,7 @@ To disable a source, edit its spec to `status: disabled` or delete the local spe
 
 ## Daily librarian behavior
 
-1. Read `system/RULES.md`.
+1. Read `system/GUARDRAILS.md` and `system/RULES.md`.
 2. Read all local `workspace/source-specs/*.md` files.
 3. For each spec with `status: enabled`, follow its collection contract.
 4. Write normalized source records under `data/sources/`.

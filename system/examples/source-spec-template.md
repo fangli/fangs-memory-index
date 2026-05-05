@@ -7,12 +7,32 @@ collection_mode: passive
 frequency: daily
 lookback: previous_local_day
 trust: mixed
+allowed_actions:
+  - read_local_files
+writes_allowed:
+  - data/sources
+  - data/atoms
+dedupe_key:
+  - source_id
+  - origin.id
+  - hash
+freshness_policy:
+  default: unknown
 outputs:
   - source_record
   - atoms
 ---
 
 # Example Source Spec
+
+## Guardrails
+
+- **Role:** local source spec template.
+- **Mutation:** copy into `workspace/source-specs/` before editing for a local installation.
+- **Allowed writes:** copied local specs may authorize writes only under `data/`.
+- **Do not:** put credentials, secrets, or destructive shell commands in source specs.
+- **Before acting:** validate `allowed_actions`, `writes_allowed`, and `dedupe_key`.
+- **Failure mode:** if required source access is unclear, keep status as `draft`.
 
 ## Purpose
 

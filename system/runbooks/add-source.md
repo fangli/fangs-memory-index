@@ -1,5 +1,15 @@
 # Runbook: Add, Update, or Delete a Source
 
+## Guardrails
+
+- **Role:** local source configuration runbook.
+- **Mutation:** local config only.
+- **Allowed writes:** `workspace/source-specs/*.md`.
+- **Do not:** edit `system/examples/` when adding a local source; do not write generated records to `workspace/`.
+- **Before acting:** decide whether the request is a local source config change or a framework/example change.
+- **After acting:** report the source spec path, status, collection mode, allowed actions, and any missing capabilities.
+- **Failure mode:** if the source requires new collector code or unclear credentials, create the spec as `status: draft` and report the blocker.
+
 ## Add a source
 
 1. Read `workspace/AGENTS.md`.
@@ -13,6 +23,9 @@
    - `lookback`
    - `trust`
    - `outputs`
+   - `allowed_actions`
+   - `writes_allowed`
+   - `dedupe_key`
 4. Describe collection contract, extraction hints, freshness, and output requirements.
 5. Do not edit daily ingestion logic unless the new source requires a genuinely new collector capability.
 
